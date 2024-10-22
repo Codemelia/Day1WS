@@ -1,11 +1,18 @@
 package ws;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class ShoppingCart {
     
     // Define List<String> to hold items in cart
-    private static List<String> cart;
+    static List<String> cart;
+
+        private static String cartDirectory = "db";
+        private static String currentUser = null;
+        private static ShoppingCartDB shoppingCartDB;
 
     // Declare constructor
     public ShoppingCart() {
@@ -14,7 +21,7 @@ public class ShoppingCart {
     }
 
     // Declare list() method
-    public void list() {
+    public static void list() {
         // Checks if cart is empty
         if (cart.isEmpty()) {
             // Prints empty cart message
@@ -59,5 +66,5 @@ public class ShoppingCart {
             System.out.println("Item removed from the cart.");
         }
     }
-
+    
 }

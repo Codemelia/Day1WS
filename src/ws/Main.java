@@ -1,11 +1,25 @@
 package ws;
 
 import java.io.*;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-// For main functions of ShoppingCart
-public class Main extends ShoppingCart {
+// For main functions of ShoppingCart, ShoppingCartDB
+public class Main {
 
-    public static void main(String[] args) {
+    private static String cartDirectory = "db";
+    private static String currentUser = null;
+    private static ShoppingCartDB shoppingCartDB;
+
+    public static void main(String[] args) throws NumberFormatException {
+        // Checks command-line args to set cartDirectory
+        if (args.length > 0) {
+            cartDirectory = args[0];
+        }
+
+        shoppingCartDB = new ShoppingCartDB(cartDirectory); // Initialises ShoppingCartDB with specified directory
+
         // Define instance of ShoppingCart
         ShoppingCart shoppingCart = new ShoppingCart();
 
@@ -13,10 +27,11 @@ public class Main extends ShoppingCart {
         Console cons = System.console();
 
         // Prompt line
-        System.out.print("Enter command (list, add, delete, exit): ");
+        System.out.print("Enter command (list, add, delete, exit, login, save, users): ");
 
         // Runs loop while condition is true
         while (true) {
+
             // Prints > for cmd, trims whitespace
             String cmd = cons.readLine("> ").trim();
 
@@ -26,7 +41,7 @@ public class Main extends ShoppingCart {
 
             // If cmd = list, use list method from ShoppingCart
             } else if (cmd.equals("list")) {
-                shoppingCart.list();
+                ShoppingCart.list();
 
             // If cmd = add, use add method from ShoppingCart
             } else if (cmd.startsWith("add ")) {
@@ -39,6 +54,18 @@ public class Main extends ShoppingCart {
                 // Use delete method from ShoppingCart
                 shoppingCart.delete(itemNum);
             // If all conditions not met, print unknown cmd message
+
+            } else if (cmd.startsWith("login ")) {
+                String user = cmd.substring(6);
+                shoppingCartDB.loadUser(user);
+
+            } else if (cmd.startsWith("save ")) {
+                String userFile = cmd.substring(5);
+                shoppingCartDB.saveUser(userFile, ShoppingCart.cart);
+
+            } else if (cmd.equals("users")) {
+                shoppingCartDB.listUsers();
+
             } else {
                 System.out.println("Unknown command.");
             }
